@@ -30,23 +30,28 @@ if BASE_DIR not in sys.path:
 # ---------------- IMPORTS FROM SRC ----------------
 from src.features import normalize_columns, add_features
 
-# ---------------- CACHED LOADERS ----------------
+# ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_model():
-    model_path = os.path.join(BASE_DIR, "models", "model_pipeline.pkl")
+    
+    model_path = os.path.join(PROJECT_ROOT, "models", "model_pipeline.pkl")
+    
     if not os.path.exists(model_path):
-        st.error("❌ Trained model not found in models/model_pipeline.pkl")
+        st.error(f"❌ Trained model not found at: {model_path}")
         st.stop()
+        
     return joblib.load(model_path)
 
+# ---------------- LOAD DATA ----------------
 @st.cache_data
 def load_data():
-    data_path = os.path.join(BASE_DIR, "data", "crop_yield.csv")
+    data_path = os.path.join(PROJECT_ROOT, "data", "crop_yield.csv")
+    
     if not os.path.exists(data_path):
-        st.error("❌ Dataset not found in data/crop_yield.csv")
+        st.error(f"❌ Dataset not found at: {data_path}")
         st.stop()
+        
     return pd.read_csv(data_path)
-
 # ---------------- CONFIG ----------------
 st.set_page_config(
     page_title="Crop Yield Prediction",
