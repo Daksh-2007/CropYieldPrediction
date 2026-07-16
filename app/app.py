@@ -1,24 +1,29 @@
+import sys
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
-import sys
-import os
-import importlib.util
 
+# ---------------- PATH RESOLUTION FOR STREAMLIT CLOUD ----------------
+# Get absolute path to project root (where src/, data/, models/ are located)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIR)
 
+# Insert root folder to sys.path to ensure 'src' package can be imported reliably
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+# ---------------- IMPORTS FROM SRC ----------------
 from src.features import normalize_columns, add_features
 
-# Load Model & Data safely
+# ---------------- CACHED LOADERS ----------------
 @st.cache_resource
 def load_model():
     model_path = os.path.join(BASE_DIR, "models", "model_pipeline.pkl")
     if not os.path.exists(model_path):
-        st.error("❌ Model file not found in models/model_pipeline.pkl")
+        st.error("❌ Trained model not found in models/model_pipeline.pkl")
         st.stop()
     return joblib.load(model_path)
 
@@ -26,7 +31,7 @@ def load_model():
 def load_data():
     data_path = os.path.join(BASE_DIR, "data", "crop_yield.csv")
     if not os.path.exists(data_path):
-        st.error("❌ Data file not found in data/crop_yield.csv")
+        st.error("❌ Dataset not found in data/crop_yield.csv")
         st.stop()
     return pd.read_csv(data_path)
 
@@ -38,31 +43,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---------------- PATH ----------------
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-# ---------------- LOAD MODEL ----------------
-@st.cache_resource
-def load_model():
-    model_path = os.path.join(BASE_DIR, "models", "model_pipeline.pkl")
-    
-    if not os.path.exists(model_path):
-        st.error("❌ Trained model not found. Run training first.")
-        st.stop()
-        
-    return joblib.load(model_path)
-
-# ---------------- LOAD DATA ----------------
-@st.cache_data
-def load_data():
-    data_path = os.path.join(BASE_DIR, "data", "crop_yield.csv")
-    
-    if not os.path.exists(data_path):
-        st.error("❌ Dataset not found.")
-        st.stop()
-        
-    return pd.read_csv(data_path)
-
+# Load resources
 model = load_model()
 df = load_data()
 
@@ -133,7 +114,7 @@ if page == "🎯 Prediction":
                 "Pesticide": pesticide
             }])
 
-            # 🔥 Apply SAME preprocessing as training
+            # Apply preprocessing
             input_df = normalize_columns(input_df)
             input_df = add_features(input_df)
 
@@ -237,5 +218,5 @@ This application predicts crop yield using a trained Machine Learning pipeline.
 - Random Forest (with feature engineering)
                 
 ### Developer:
-    - Daksh Parmar
+- Daksh Parmar
 """)
