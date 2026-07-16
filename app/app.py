@@ -1,11 +1,25 @@
 import sys
 import os
+
+# ---------------- PATH FOR STREAMLIT CLOUD ----------------
+# Get the absolute path of app.py
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Get the project root directory
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+# ---------------- STACK IMPORTS ----------------
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
+from src.features import normalize_columns, add_features
 
 # ---------------- PATH RESOLUTION FOR STREAMLIT CLOUD ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
