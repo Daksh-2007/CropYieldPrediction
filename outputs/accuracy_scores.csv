@@ -1,0 +1,4 @@
+Model,R2_Score
+Linear Regression,0.1245
+Random Forest,0.9587
+XGBoost,0.9292
