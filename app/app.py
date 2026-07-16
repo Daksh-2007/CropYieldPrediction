@@ -8,10 +8,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # ---------------- PATH RESOLUTION FOR STREAMLIT CLOUD ----------------
-# Get absolute path to project root (where src/, data/, models/ are located)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Insert root folder to sys.path to ensure 'src' package can be imported reliably
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
